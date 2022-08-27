@@ -9,10 +9,21 @@ const server: Hapi.Server = Hapi.server({
   host: process.env.APP_HOST,
 });
 
-export async function start(): Promise<Hapi.Server> {
+// Registra os plugins e inicializa o servidor
+export async function createServer(): Promise<Hapi.Server> {
   await server.register([status]);
+  // inicia os caches, finaliza o registro do plugin
+  // mas não inicia a escuta na porta de conexão.
+  await server.initialize();
+
+  return server;
+}
+
+// Inicia o servidor ouvindo a porta da conexão
+export async function startServer(server: Hapi.Server): Promise<Hapi.Server> {
   await server.start();
   console.log(`Server running on ${server.info.uri}`);
+
   return server;
 }
 
@@ -20,11 +31,3 @@ process.on('unhandledRejection', (err) => {
   console.log(err);
   process.exit(1);
 });
-
-start()
-  .then((server) => {
-    console.log(`Server running on ${server.info.uri}`);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
