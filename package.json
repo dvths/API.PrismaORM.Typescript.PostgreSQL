@@ -2,9 +2,16 @@
   "name": "api.prismaorm.typescrypt.postgressql",
   "version": "1.0.0",
   "description": "## Descrição",
-  "main": "index.js",
+  "main": "server.ts",
+  "prisma": {
+    "schema": "./src/external/prisma/schema.prisma"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "ts-node-dev --respawn src/server.ts",
+    "build": "rimraf ./dist && tsc",
+    "start": "npm run build && node dist/server.js",
+    "seed": "npx prisma db seed --preview-feature",
+    "migrate": "npx prisma migrate dev --name init"
   },
   "keywords": [],
   "author": "",
