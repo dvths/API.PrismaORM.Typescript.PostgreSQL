@@ -3,5 +3,9 @@ POSTGRES_PASSWORD=<your password>
 POSTGRES_PORT=<port (5432)>
 POSTGRES_HOST=<your host>
 POSTGRES_DB=<your database name>
+
+APP_PORT=<your port for app>
+APP_HOST=<your port for app host>
+
 # URL 
 DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public"
