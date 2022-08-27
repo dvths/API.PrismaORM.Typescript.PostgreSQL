@@ -7,7 +7,7 @@
     "schema": "./src/external/prisma/schema.prisma"
   },
   "scripts": {
-    "dev": "ts-node-dev --respawn src/server.ts",
+    "dev": "ts-node-dev --respawn src/index.ts",
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && node dist/server.js",
     "seed": "npx prisma db seed --preview-feature",
