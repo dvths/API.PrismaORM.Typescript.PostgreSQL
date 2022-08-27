@@ -9,7 +9,15 @@ const server: Hapi.Server = Hapi.server({
 });
 
 export async function start(): Promise<Hapi.Server> {
+  server.route({
+    method: 'GET',
+    path: '/',
+    handler: (_, h: Hapi.ResponseToolkit) => {
+      return h.response({ up: true }).code(200);
+    },
+  });
   await server.start();
+  console.log(`Server running on ${server.info.uri}`);
   return server;
 }
 
