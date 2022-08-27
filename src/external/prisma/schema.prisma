@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int                @id @default(autoincrement())
+  email      String             @unique
+  firstname  String
+  lastname   String
+  social     Json?
+  courses    CourseEnrollment[]
+  testResult TestResult[]       @relation(name: "results")
+  testGraded TestResult[]       @relation(name: "graded")
+}
+
+model Course {
+  id            Int                @id @default(autoincrement())
+  name          String
+  courseDetails String?
+  members       CourseEnrollment[]
+  tests         Test[]
+}
+
+model Test {
+  id          Int          @id @default(autoincrement())
+  updatedAt   DateTime     @updatedAt
+  name        String // nome do teste
+  date        DateTime // data do teste
+  courseId    Int
+  course      Course       @relation(fields: [courseId], references: [id])
+  testResults TestResult[]
+}
+
+model TestResult {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  result    Int
+  testId    Int
+  test      Test     @relation(fields: [testId], references: [id])
+  studentId Int
+  student   User     @relation(name: "results", fields: [studentId], references: [id])
+  graderId  Int
+  gradedBy  User     @relation(name: "graded", fields: [graderId], references: [id])
+}
+
+model CourseEnrollment {
+  createdAt DateTime @default(now())
+  role      UserRole
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id])
+
+  @@id([userId, courseId])
+  @@index([userId, role])
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+}
