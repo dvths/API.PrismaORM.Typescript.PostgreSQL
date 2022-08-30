@@ -1,6 +1,7 @@
 import Hapi from '@hapi/hapi';
 import dotenv from 'dotenv';
-import status from './external/plugins/status';
+import statusPlugin from './external/plugins/status';
+import prismaPlugin from './external/plugins/prisma';
 
 dotenv.config();
 
@@ -11,7 +12,7 @@ const server: Hapi.Server = Hapi.server({
 
 // Registra os plugins e inicializa o servidor
 export async function createServer(): Promise<Hapi.Server> {
-  await server.register([status]);
+  await server.register([statusPlugin, prismaPlugin]);
   // inicia os caches, finaliza o registro do plugin
   // mas não inicia a escuta na porta de conexão.
   await server.initialize();
