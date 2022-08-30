@@ -8,11 +8,13 @@
   },
   "scripts": {
     "dev": "ts-node-dev --respawn src/index.ts",
-    "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node dist/server.js",
+    "build": "rimraf ./dist && npx prisma generate && npx tsc",
+    "compile": "npx tsc",
+    "start": "npm run build && node dist/index.js",
     "seed": "npx prisma db seed --preview-feature",
     "migrate": "npx prisma migrate dev --name init",
-    "test": "jest"
+    "test": "jest",
+    "prisma:genefate": "npx prisma generate"
   },
   "keywords": [],
   "author": "",
