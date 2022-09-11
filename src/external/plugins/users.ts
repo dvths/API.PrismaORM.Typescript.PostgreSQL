@@ -1,4 +1,5 @@
 import Hapi from '@hapi/hapi';
+import Joi from 'joi';
 
 const userPlugin = {
   name: 'app/users',
@@ -10,6 +11,14 @@ const userPlugin = {
         method: 'POST',
         path: '/users',
         handler: createUserHandler,
+        options: {
+          validate: {
+            payload: userInputValidator,
+            failAction: (request, h, err) => {
+              throw err;
+            },
+          },
+        },
       },
     ]);
   },
@@ -29,7 +38,10 @@ interface IUserInput {
   };
 }
 
-async function createUserHandler(request: Hapi.Request, h: Hapi.ResponseToolkit) {
+async function createUserHandler(
+  request: Hapi.Request,
+  h: Hapi.ResponseToolkit,
+) {
   const { prisma } = request.server.app;
   const payload = request.payload as IUserInput;
 
@@ -50,3 +62,15 @@ async function createUserHandler(request: Hapi.Request, h: Hapi.ResponseToolkit)
     console.log(err);
   }
 }
+
+const userInputValidator = Joi.object({
+  firstname: Joi.string().required(),
+  lastname: Joi.string().required(),
+  email: Joi.string().email().required(),
+  social: Joi.object({
+    facebook: Joi.string().optional(),
+    twitter: Joi.string().optional(),
+    github: Joi.string().optional(),
+    website: Joi.string().optional(),
+  }).optional(),
+});
